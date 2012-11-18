@@ -1,6 +1,6 @@
 $ ->
 	upload = (files)->
-		api = 'http://localhost:3000/upload'
+		api = 'http://ascension.chi.mag.keio.ac.jp/upload'
 		fd = new FormData()
 		for file in files
 			fd.append 'image', file
@@ -42,7 +42,7 @@ $ ->
 		base.bind 'dragenter dragover', ()->
 			return false
 
-	socket = io.connect 'http://192.168.111.7:3001'
+	socket = io.connect 'http://olive.chi.mag.keio.ac.jp'
 	socket.emit 'tagid', {tagid: 'hoge'}
 	socket.on 'initialize', (data)->
 		for d in data
@@ -55,4 +55,6 @@ $ ->
 			ele_base.hide()
 			ele_base.append ele_img
 			$(".content").append ele_base
-			ele_base.show(1000)
+			ele_base.show(500)
+	socket.on 'add',(data)->
+		console.log data

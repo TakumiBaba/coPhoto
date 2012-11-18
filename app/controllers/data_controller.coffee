@@ -4,9 +4,8 @@ exports.DataController = (app) ->
   # object substitution.
   {Data} = app.settings.models
   {Image} = app.settings.models
- 	io = app.settings.socketio
+ 	Users = []
   fs = require 'fs'
-
 
   return {
     index: (req, res, next) ->
@@ -25,6 +24,8 @@ exports.DataController = (app) ->
       path = "./public/img/test_id/"
       console.log req.files.image.length
       iLength = req.files.image.length - 1
+      imageArray = []
+      v = 0
       for i in [0..iLength]
         img = req.files.image[i]
         console.log req.files.image[i]
@@ -33,17 +34,25 @@ exports.DataController = (app) ->
         image = new Image()
         image.name  = img.name
         image.date  = img.lastModifiedDate
-        image.url   = "http://localhost:3000/img/test_id/"+img.name
+        image.url   = "http://ascension.chi.mag.keio.ac.jp/img/test_id/"+img.name
         image.tagid = "hoge"
-        image.save (err)->
+        imageArray.push image
+        image.save (err)=>
         	if err
-            console.log err
+            throw err
           console.log 'save!'
-          return res.send 'ok'
+          for u in Users
+            if u.tagid = image.tagid
+              u.emit 'add', {url: imageArray[v].url}
+              v += 1
+      return res.send 'ok'
 
-    websocket:
-    	initialize: (data, socket)->
-    		Image.find {tagid: data.tagid}, (err, docs)->
-    			console.log docs
-    			socket.emit 'initialize', docs
+    websocket: (socket)->
+      socket.on 'tagid', (data)->
+        socket.tagid = data.tagid
+        Users.push socket
+        Image.find {tagid: data.tagid}, (err, docs)->
+          socket.emit 'initialize', docs
+      socket.on 'add', (data)->
+
   }

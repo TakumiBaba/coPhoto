@@ -13,8 +13,7 @@ module.exports = (app, io) ->
   app.post '/upload', DataController.image_upload
 
   ### webscoket ###
-  io.sockets.on 'connection', (socket)->
-    socket.on 'tagid', (data)=>DataController.websocket.initialize(data, socket)
+  io.sockets.on 'connection', DataController.websocket
 
   ### Fallback ###
   # Should handle the fallback(404) with front server.
