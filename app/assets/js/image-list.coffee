@@ -1,6 +1,7 @@
 $ ->
 	upload = (files)->
 		api = 'http://ascension.chi.mag.keio.ac.jp/upload'
+		ws_api = "http://olive.chi.mag.keio.ac.jp/upload"
 		fd = new FormData()
 		for file in files
 			fd.append 'image', file
@@ -17,44 +18,61 @@ $ ->
 				console.log 'error!'
 				console.log e
 
+	$("#add_button").click ()->
+		$('#file').click()
+	$("#file").change (e)->
+		files = document.getElementById('file').files
+		upload files
+		for file in files
+			if file
+				blobURLref = window.webkitURL.createObjectURL file
+				appendImage blobURLref
+	$(window).scroll
+	appendImage = (src)->
 
-	$("#add-button").click ()->
-		w = $(window)
-		base = $("<div>")
-		base.attr "draggable", 'true'
-		base.css
-			height: w.height()
-			width:  w.width()/2
-			position: 'absolute'
-			left:	w.width()/4
-			top: -w.height()
-			'z-index': 100
-			'background-color': 'gray'
-		$('body').append base
-		base.animate {
-			top: 0
-		},1000
+		ele_base = $('<div>')
+		ele_base.addClass 'img-element'
+		ele_base.css
+			height:$(window).height()*0.2
+		ele_img  = $('<img>')
+		ele_img.attr 'src', src
+		ele_base.hide()
+		ele_base.append ele_img
+		$(".content").append ele_base
+		ele_base.show(500)
+		ele_base.isOpen = false
+		ele_base.bind 'click touchend touchstart', (e)->
+			if e.type is 'touchstart'
+				touchPoint.x = e.changeTouches[0].pageX
+				touchPoint.y = e.changeTouches[0].pageY
+			if e.type is 'touchend'
+				if touchPoint.x is e.changeTouches[0].pageX &&
+					 touchPoint.y is e.changeTouches[0].pageY
+					if this.isOpen
+						$(e.currentTarget).height($(window).height()*0.2)
+						this.isOpen = false
+					else
+						$(e.currentTarget).height($(e.target).height())
+						this.isOpen = true
+			if e.type is 'click'
+				if this.isOpen
+					$(e.currentTarget).height($(window).height()*0.2)
+					this.isOpen = false
+				else
+					$(e.currentTarget).height($(e.target).height())
+					this.isOpen = true
 
-		base.bind 'drop', (e)->
-			e.preventDefault()
-			files = e.originalEvent.dataTransfer.files
-			upload files
-		base.bind 'dragenter dragover', ()->
-			return false
+	touchPoint = {}
+
+
+	image_url_list = []
 
 	socket = io.connect 'http://olive.chi.mag.keio.ac.jp'
 	socket.emit 'tagid', {tagid: 'hoge'}
 	socket.on 'initialize', (data)->
-		for d in data
-			ele_base = $('<div>')
-			ele_base.addClass 'img-element'
-			ele_base.css
-				height: $(window).width()*0.4
-			ele_img  = $('<img>')
-			ele_img.attr 'src', d.url
-			ele_base.hide()
-			ele_base.append ele_img
-			$(".content").append ele_base
-			ele_base.show(500)
+		image_url_list = data
+		for i in [0..8]
+			appendImage image_url_list[i].url
 	socket.on 'add',(data)->
 		console.log data
+###

@@ -22,13 +22,19 @@ exports.DataController = (app) ->
 
 	  image_upload: (req, res, next)->
       path = "./public/img/test_id/"
-      console.log req.files.image.length
+      req.setEncoding 'utf8'
+      console.log req
+      console.log req.files.image
       iLength = req.files.image.length - 1
+      if iLength > 10
+        iLength = 0
       imageArray = []
       v = 0
       for i in [0..iLength]
         img = req.files.image[i]
-        console.log req.files.image[i]
+        if iLength is 0
+          img = req.files.image
+        console.log img
         readFile = fs.readFileSync img.path
         isWritten = fs.writeFileSync path+img.name, readFile
         image = new Image()
@@ -45,7 +51,7 @@ exports.DataController = (app) ->
             if u.tagid = image.tagid
               u.emit 'add', {url: imageArray[v].url}
               v += 1
-      return res.send 'ok'
+          return res.send 'ok'
 
     websocket: (socket)->
       socket.on 'tagid', (data)->

@@ -3,9 +3,11 @@ extends layout
 
 block contents
 	header(class="bar-title")
-		h1(class="title")Ratchet
+		h1(class="title")
+			|いえーい！
+		a(class="button", id="add_button", href="#")
+			|+
 
 	div(class="content")
-		div(class="img-element first", id="add-button")
-			img(src="/img/coPhoto_addButton.png")
-		div(class="img-element")
+
+		input(type="file",id="file", name="hoge", multiple="multiple")
