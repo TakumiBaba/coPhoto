@@ -22,9 +22,6 @@ exports.DataController = (app) ->
 
 	  image_upload: (req, res, next)->
       path = "./public/img/test_id/"
-      req.setEncoding 'utf8'
-      console.log req
-      console.log req.files.image
       iLength = req.files.image.length - 1
       if iLength > 10
         iLength = 0
@@ -34,7 +31,6 @@ exports.DataController = (app) ->
         img = req.files.image[i]
         if iLength is 0
           img = req.files.image
-        console.log img
         readFile = fs.readFileSync img.path
         isWritten = fs.writeFileSync path+img.name, readFile
         image = new Image()
@@ -42,16 +38,12 @@ exports.DataController = (app) ->
         image.date  = img.lastModifiedDate
         image.url   = "http://ascension.chi.mag.keio.ac.jp/img/test_id/"+img.name
         image.tagid = "hoge"
-        imageArray.push image
-        image.save (err)=>
-        	if err
-            throw err
-          console.log 'save!'
+        imageArray[i] = image
+      for img in imageArray
+        img.save (err)->
+          url = this.emitted.complete[0].url
           for u in Users
-            if u.tagid = image.tagid
-              u.emit 'add', {url: imageArray[v].url}
-              v += 1
-          return res.send 'ok'
+            u.emit 'add', {url: url}
 
     websocket: (socket)->
       socket.on 'tagid', (data)->
