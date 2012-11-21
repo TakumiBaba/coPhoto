@@ -1,7 +1,11 @@
 $ ->
+	api = 'http://133.27.147.134:1217/upload'
+	ws_api = "http://133.27.147.134:1218/"
+
 	upload = (files)->
-		api = 'http://ascension.chi.mag.keio.ac.jp/upload'
-		ws_api = "http://olive.chi.mag.keio.ac.jp/upload"
+		#api = 'http://ascension.chi.mag.keio.ac.jp/upload'
+		#ws_api = "http://olive.chi.mag.keio.ac.jp/upload"
+
 		fd = new FormData()
 		for file in files
 			fd.append 'image', file
@@ -43,7 +47,6 @@ $ ->
 		#ele_base.css height:$('body').height()*0.4
 		ele_img  = $('<img>')
 		ele_img.attr 'src', src
-		#
 		ele_base.append ele_img
 		$(".content").prepend ele_base
 	#	ele_base.show(500)
@@ -110,9 +113,11 @@ $ ->
 	image_url_list = []
 	image_url_list_num = 0
 
-	socket = io.connect 'http://olive.chi.mag.keio.ac.jp'
+	socket = io.connect ws_api
 	socket.emit 'tagid', {tagid: 'hoge'}
 	socket.on 'initialize', (data)->
+		if data.length == 0
+			return false
 		image_url_list = data
 		start = image_url_list_num
 		end = image_url_list_num + 9

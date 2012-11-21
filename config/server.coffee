@@ -8,7 +8,7 @@ http     = require 'http'
 express  = require 'express'
 app      = express()
 io       = require('socket.io').listen 1218
-io.set 'transports', ['xhr-polling']
+#io.set 'transports', ['xhr-polling']
 
 
 (require './config') app, io

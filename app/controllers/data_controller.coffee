@@ -6,6 +6,7 @@ exports.DataController = (app) ->
   {Image} = app.settings.models
  	Users = []
   fs = require 'fs'
+  API = "http://133.27.147.134:1217/img/"
 
   return {
     index: (req, res, next) ->
@@ -36,7 +37,7 @@ exports.DataController = (app) ->
         image = new Image()
         image.name  = img.name
         image.date  = img.lastModifiedDate
-        image.url   = "http://ascension.chi.mag.keio.ac.jp/img/test_id/"+img.name
+        image.url   = API+"test_id/"+img.name
         image.tagid = "hoge"
         imageArray[i] = image
       for img in imageArray
