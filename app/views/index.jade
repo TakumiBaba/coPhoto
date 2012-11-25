@@ -3,11 +3,11 @@ extends layout
 
 block contents
 	header(class="bar-title")
+		a(class="button", id="remove_button", href="#")
+			|-
 		h1(class="title")
-			|いえーい！
 		a(class="button", id="add_button", href="#")
 			|+
 
 	div(class="content")
-
 		input(type="file",id="file", name="hoge", multiple="multiple")

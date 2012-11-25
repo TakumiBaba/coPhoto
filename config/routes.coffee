@@ -7,10 +7,13 @@ module.exports = (app, io) ->
 
   ### Routing ###
   app.get '/tag/:tag'             , ViewController.index
+  app.get "/get_title/:tag", DataController.get_tag_to_title
+  app.get "/get_tag/:title", DataController.get_title_to_tag
+  app.get "/title/:name/tag/:tag", DataController.set_tag_to_title
   # For backbone.
   app.put /^\/(.*)\.json$/, DataController.index
   app.get '/image/reset', DataController.image_reset
-  app.post '/upload', DataController.image_upload
+  app.post '/upload/:tag', DataController.image_upload
 
   ### webscoket ###
   io.sockets.on 'connection', DataController.websocket

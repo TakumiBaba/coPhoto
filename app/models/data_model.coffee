@@ -13,8 +13,13 @@ ImageSchema = new Schema
 	url:
 		type: String
 	date:
-		type: Date
+		type: Number
 	tagid:
+		type: String
+TitleSchema = new Schema
+	name:
+		type: String
+	tag:
 		type: String
 
 # Data expression defines here.
@@ -32,3 +37,6 @@ module.exports =
 
   ImageSchema: ImageSchema
   Image: mongoose.model 'image', ImageSchema
+
+  TitleSchema: TitleSchema
+  Title: mongoose.model 'title', TitleSchema
