@@ -1,6 +1,8 @@
 $ ->
-	api = 'http://133.27.147.134:1217/'
-	ws_api = "http://133.27.147.134:1218/"
+	#api = 'http://133.27.147.134:1217/'
+	#ws_api = "http://133.27.147.134:1218/"
+	api = 'http://192.168.2.103:1217/'
+	ws_api = "http://192.168.2.103:1218/"
 	tag = $(location.href.split("/")).last()[0].replace "#", ""
 	console.log tag
 	$.ajax

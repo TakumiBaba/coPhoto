@@ -8,7 +8,7 @@ exports.DataController = (app) ->
  	Users = []
   fs = require 'fs'
   im = require 'imagemagick'
-  API = "http://133.27.147.134:1217/img/"
+  API = "http://192.168.2.103:1217/img/"
 
   return {
     index: (req, res, next) ->
